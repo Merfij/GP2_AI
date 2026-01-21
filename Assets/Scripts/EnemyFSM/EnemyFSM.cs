@@ -3,12 +3,14 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System;
 
 public enum EnemyState
 {
     Patrolling,
     Chasing,
     Attacking,
+    Electrocuted
 }
 
 public class EnemyFSM : MonoBehaviour
@@ -40,6 +42,7 @@ public class EnemyFSM : MonoBehaviour
 
     [Header("Enemy Type")]
     public bool canBeStunned;
+    private bool isStunned;
     public bool isEthereal;
 
     [Header("Materials")]
@@ -96,6 +99,15 @@ public class EnemyFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isEthereal == true)
+        {
+            skinnedMeshRenderer.material = materials[1];
+        }
+        else
+        {
+            skinnedMeshRenderer.material = materials[0];
+        }
+
         switch (currentState)
         {
             case EnemyState.Patrolling:
@@ -110,6 +122,10 @@ public class EnemyFSM : MonoBehaviour
                 animator.SetInteger("AIState", 3);
                 UpdateAttack();
                 break;
+            case EnemyState.Electrocuted:
+                animator.SetInteger("AIState", 4);
+                UpdateElectrocuted(); 
+                break;
         }
 
         FieldOfViewCheck();
@@ -121,18 +137,16 @@ public class EnemyFSM : MonoBehaviour
 
         if (player.useLightBeam == false)
         {
-            Time.timeScale = 1.0f;
-        }
-
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[1];
-        } else
-        {
-
-            skinnedMeshRenderer.material = materials[0];
+            isStunned = false;
         }
     }
+
+    private void UpdateElectrocuted()
+    {
+        agent.isStopped = true;
+        isStunned = true;
+    }
+
     private void FieldOfViewCheck()
     {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
@@ -160,6 +174,7 @@ public class EnemyFSM : MonoBehaviour
     {
         agent.isStopped = true;
         agent.ResetPath();
+        isStunned = false;
 
         // Face the player
 
@@ -188,6 +203,7 @@ public class EnemyFSM : MonoBehaviour
 
     private void UpdateChase()
     {
+        isStunned = false;
         if (canSeePlayer && player.health > 0)
         {
             agent.isStopped = false;
@@ -210,6 +226,7 @@ public class EnemyFSM : MonoBehaviour
     private void UpdatePatrol()
     {
         agent.speed = patrolSpeed;
+        isStunned = false;
 
         if (!agent.pathPending && agent.remainingDistance <= waypointTolerance)
         {
@@ -241,7 +258,8 @@ public class EnemyFSM : MonoBehaviour
     {
         if (canBeStunned == true)
         {
-            Time.timeScale = 0;
+            Debug.Log("Enemy Stunned");
+            currentState = EnemyState.Electrocuted;
         } 
     }
 
@@ -249,7 +267,7 @@ public class EnemyFSM : MonoBehaviour
     {
         if (canBeStunned == true)
         {
-            Time.timeScale = 1f;
+            currentState = EnemyState.Patrolling;
         }
     }
 
@@ -258,6 +276,22 @@ public class EnemyFSM : MonoBehaviour
         if (isEthereal == true)
         {
             skinnedMeshRenderer.material = materials[0];
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (canBeStunned == true)
+        {
+            if (isStunned == true)
+            {
+                health -= damage;
+            }
+            else return;
+        }
+        else
+        {
+            health -= damage;
         }
     }
 }

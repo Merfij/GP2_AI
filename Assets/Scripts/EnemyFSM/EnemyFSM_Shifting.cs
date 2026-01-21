@@ -31,9 +31,7 @@ public class EnemyFSM_Shifting : MonoBehaviour
     [Header("Health")]
     public float health;
 
-    [Header("Materials")]
-    public List<Material> materials;
-    public SkinnedMeshRenderer skinnedMeshRenderer;
+    public bool canBeStunned;
 
     public Transform[] checkpoints;
 
@@ -104,7 +102,7 @@ public class EnemyFSM_Shifting : MonoBehaviour
 
         if (player.useLightBeam == false)
         {
-            Time.timeScale = 1.0f;
+            animator.speed = 1;
         }
     }
     private void FieldOfViewCheck()
@@ -206,5 +204,27 @@ public class EnemyFSM_Shifting : MonoBehaviour
         float randomfloat = Random.Range(-12, 12);
         Vector3 randomPOS = new Vector3(target.position.x + randomfloat, target.position.y, transform.position.z);
         transform.position = randomPOS;
+    }
+
+    public void StunEnemy()
+    {
+        if (canBeStunned == true)
+        {
+            animator.speed = 0f;
+            agent.speed = 0f;
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (animator.speed == 0)
+        {
+            health -= damage;
+        } else
+        {
+            float randomfloat = Random.Range(-12, 12);
+            Vector3 randomPOS = new Vector3(target.position.x + randomfloat, target.position.y, transform.position.z);
+            transform.position = randomPOS;
+        }
     }
 }
