@@ -54,7 +54,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.37007874
+        functionName: ActivateEnemyCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 90a70b7a54d676a4cb9f31c3b40d13e6, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.43832022
+        functionName: DisaleEnemyCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 90a70b7a54d676a4cb9f31c3b40d13e6, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

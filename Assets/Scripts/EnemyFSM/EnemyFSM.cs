@@ -1,5 +1,3 @@
-using System;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -38,14 +36,16 @@ public class EnemyFSM : MonoBehaviour
 
     public NPCTarget player;
 
+    public SphereCollider handCollider;
+
     int currentIndex = 0;
     NavMeshAgent agent;
 
     public EnemyState currentState;
 
-
     private void Awake()
     {
+        handCollider.enabled = false;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = attackRange;
@@ -98,35 +98,6 @@ public class EnemyFSM : MonoBehaviour
 
         FieldOfViewCheck();
     }
-
-    private void UpdateAttack()
-    {
-        Debug.Log("Player was attacked");
-
-        agent.isStopped = true;
-        agent.ResetPath();
-
-        // Face the player
-        Vector3 lookDir = target.position - transform.position;
-        lookDir.y = 0;
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            Quaternion.LookRotation(lookDir),
-            Time.deltaTime * 5f
-        );
-
-        if (Vector3.Distance(transform.position, target.position) > attackRange)
-        {
-            currentState = EnemyState.Chasing;
-            return;
-        }
-
-        if (player.health <= 0)
-        {
-            currentState = EnemyState.Patrolling;
-        }
-    }
-
     private void FieldOfViewCheck()
     {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
@@ -150,23 +121,42 @@ public class EnemyFSM : MonoBehaviour
             canSeePlayer = false;
     }
 
+    private void UpdateAttack()
+    {
+        agent.isStopped = true;
+        agent.ResetPath();
+
+        // Face the player
+
+        if (player.health > 0)
+        {
+            Vector3 lookDir = target.position - transform.position;
+            lookDir.y = 0;
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                Quaternion.LookRotation(lookDir),
+                Time.deltaTime * 5f
+            );
+
+            if (Vector3.Distance(transform.position, target.position) > attackRange + 0.5f)
+            {
+                currentState = EnemyState.Chasing;
+                return;
+            }
+        }
+
+        if (player.health <= 0)
+        {
+            currentState = EnemyState.Patrolling;
+        }
+    }
+
     private void UpdateChase()
     {
-        //if (canSeePlayer)
-        //{
-        //    agent.SetDestination(target.position);
-        //    agent.speed = chaseSpeed;
-        //}
-
-        //if(Vector3.Distance(transform.position, target.position) < attackRange)
-        //{
-        //    currentState = EnemyState.Attacking;
-        //    return;
-        //}
-
-        if (canSeePlayer)
+        if (canSeePlayer && player.health > 0)
         {
             agent.isStopped = false;
+            chaseSpeed = Vector3.Distance(transform.position,target.transform.position);
             agent.speed = chaseSpeed;
             agent.SetDestination(target.position);
         }
@@ -182,7 +172,7 @@ public class EnemyFSM : MonoBehaviour
     {
         agent.speed = patrolSpeed;
 
-        if (!agent.pathPending && agent.remainingDistance < waypointTolerance)
+        if (!agent.pathPending && agent.remainingDistance <= waypointTolerance)
         {
             currentIndex = (currentIndex + 1) % checkpoints.Length;
             agent.SetDestination(checkpoints[currentIndex].position);
@@ -196,5 +186,15 @@ public class EnemyFSM : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void ActivateEnemyCollider()
+    {
+        handCollider.enabled = true;
+    }
+
+    public void DisaleEnemyCollider()
+    {
+        handCollider.enabled = false;
     }
 }
