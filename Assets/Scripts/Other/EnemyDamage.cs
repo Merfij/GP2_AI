@@ -10,6 +10,7 @@ public class EnemyDamage : MonoBehaviour
 
     private void Awake()
     {
+        target = GameObject.FindGameObjectWithTag("Player").GetComponent<NPCTarget>();
         canAttack = true;
     }
 

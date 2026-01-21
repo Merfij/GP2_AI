@@ -1,17 +1,7 @@
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
 
-public enum EnemyState
-{
-    Patrolling,
-    Chasing,
-    Attacking,
-}
-
-public class EnemyFSM : MonoBehaviour
+public class EnemyFSM_NoPatrol : MonoBehaviour
 {
     [Header("FOV Settings")]
     public float radius;
@@ -26,7 +16,6 @@ public class EnemyFSM : MonoBehaviour
     public Transform target;
 
     [Header("Chase Range")]
-    public float patrolSpeed;
     public float chaseRange;
     public float chaseSpeed;
     public float attackRange;
@@ -34,19 +23,6 @@ public class EnemyFSM : MonoBehaviour
 
     [Header("Animator")]
     [SerializeField] private Animator animator;
-
-    [Header("Health")]
-    public float health;
-
-    [Header("Enemy Type")]
-    public bool canBeStunned;
-    public bool isEthereal;
-
-    [Header("Materials")]
-    public List<Material> materials;
-    public SkinnedMeshRenderer skinnedMeshRenderer;
-
-    public Transform[] checkpoints;
 
     public NPCTarget player;
 
@@ -64,19 +40,15 @@ public class EnemyFSM : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = attackRange;
         agent.autoBraking = true;
-        skinnedMeshRenderer = GameObject.FindGameObjectWithTag("EnemySkin").GetComponent<SkinnedMeshRenderer>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<NPCTarget>();
+        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        //playerRef = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentState = EnemyState.Patrolling;
-        if (checkpoints.Length > 0)
-        {
-            agent.SetDestination(checkpoints[currentIndex].position);
-        }
-
-        skinnedMeshRenderer.material = materials[1];
+        currentState = EnemyState.Chasing;
     }
     private void OnDrawGizmos()
     {
@@ -98,10 +70,6 @@ public class EnemyFSM : MonoBehaviour
     {
         switch (currentState)
         {
-            case EnemyState.Patrolling:
-                animator.SetInteger("AIState", 1);
-                UpdatePatrol();
-                break;
             case EnemyState.Chasing:
                 animator.SetInteger("AIState", 2);
                 UpdateChase();
@@ -113,25 +81,6 @@ public class EnemyFSM : MonoBehaviour
         }
 
         FieldOfViewCheck();
-
-        if (health <= 0)
-        {
-            Destroy(gameObject);
-        }
-
-        if (player.useLightBeam == false)
-        {
-            Time.timeScale = 1.0f;
-        }
-
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[1];
-        } else
-        {
-
-            skinnedMeshRenderer.material = materials[0];
-        }
     }
     private void FieldOfViewCheck()
     {
@@ -179,11 +128,6 @@ public class EnemyFSM : MonoBehaviour
                 return;
             }
         }
-
-        if (player.health <= 0)
-        {
-            currentState = EnemyState.Patrolling;
-        }
     }
 
     private void UpdateChase()
@@ -191,12 +135,8 @@ public class EnemyFSM : MonoBehaviour
         if (canSeePlayer && player.health > 0)
         {
             agent.isStopped = false;
-            float currentSpeed = Vector3.Distance(transform.position,target.transform.position);
-            if (currentSpeed > chaseSpeed)
-            {
-                currentSpeed = chaseSpeed;
-            }
-            agent.speed = currentSpeed;
+            chaseSpeed = Vector3.Distance(transform.position,target.transform.position);
+            agent.speed = chaseSpeed;
             agent.SetDestination(target.position);
         }
 
@@ -204,26 +144,6 @@ public class EnemyFSM : MonoBehaviour
         {
             currentState = EnemyState.Attacking;
             return;
-        }
-    }
-
-    private void UpdatePatrol()
-    {
-        agent.speed = patrolSpeed;
-
-        if (!agent.pathPending && agent.remainingDistance <= waypointTolerance)
-        {
-            currentIndex = (currentIndex + 1) % checkpoints.Length;
-            agent.SetDestination(checkpoints[currentIndex].position);
-        }
-
-        if (player.health > 0)
-        {
-            if (Vector3.Distance(transform.position, target.position) < chaseRange || canSeePlayer == true)
-            {
-                currentState = EnemyState.Chasing;
-                return;
-            }
         }
     }
 
@@ -235,29 +155,5 @@ public class EnemyFSM : MonoBehaviour
     public void DisaleEnemyCollider()
     {
         handCollider.enabled = false;
-    }
-
-    public void StunEnemy()
-    {
-        if (canBeStunned == true)
-        {
-            Time.timeScale = 0;
-        } 
-    }
-
-    public void ResumeEnemy()
-    {
-        if (canBeStunned == true)
-        {
-            Time.timeScale = 1f;
-        }
-    }
-
-    public void EtherealEnemy()
-    {
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[0];
-        }
     }
 }

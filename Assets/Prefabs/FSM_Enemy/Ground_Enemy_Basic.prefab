@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6261171146505393593
 Transform:
   m_ObjectHideFlags: 0
@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5925930180252146132}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -109,7 +109,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
@@ -120,11 +120,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5925930180252146132}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ad36053a2fd65c4b8a6eedfc8649b43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  sphere: {fileID: 0}
+  sphereMesh: {fileID: 0}
 --- !u!1001 &6551029067771419143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -339,7 +341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
       propertyPath: m_Name
-      value: Enemy_FSM
+      value: Ground_Enemy_Basic
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
       propertyPath: m_Layer
@@ -445,10 +447,26 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6374709604153893705, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6374709604153893705, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5d3bbdb7eb677ab4585cf6955f730823, type: 2}
     - target: {fileID: 6514210125699187276, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6860641434701783778, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6860641434701783778, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5d3bbdb7eb677ab4585cf6955f730823, type: 2}
     - target: {fileID: 7363479242261063072, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -496,6 +514,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4442561927734698445}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7767418659223566088}
     - targetCorrespondingSourceObject: {fileID: 2715566404302941441, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3451981683987010126}
@@ -503,6 +524,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7699592856684185540}
   m_SourcePrefab: {fileID: 100100000, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+--- !u!137 &188705496870107470 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6374709604153893705, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
+  m_PrefabInstance: {fileID: 6551029067771419143}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &829642629972404118 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}
@@ -563,6 +589,12 @@ MonoBehaviour:
   attackRange: 1
   waypointTolerance: 4
   animator: {fileID: 829642629972404118}
+  health: 10
+  canBeStunned: 0
+  materials:
+  - {fileID: -1360991219368177298, guid: f3eb14732a042a24993e3b12c6d82d6c, type: 3}
+  - {fileID: 2100000, guid: 5d3bbdb7eb677ab4585cf6955f730823, type: 2}
+  skinnedMeshRenderer: {fileID: 188705496870107470}
   checkpoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -621,6 +653,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-7767418659223566088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208361532230412118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ad36053a2fd65c4b8a6eedfc8649b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightSphere
+  sphere: {fileID: 6759784930325836555}
+  sphereMesh: {fileID: 5816982309683792356}
 --- !u!4 &6729318230935698924 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61b03e99bee6c884987a99068fa4841e, type: 3}

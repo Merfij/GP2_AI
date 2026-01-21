@@ -4,14 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
-public enum EnemyState
-{
-    Patrolling,
-    Chasing,
-    Attacking,
-}
-
-public class EnemyFSM : MonoBehaviour
+public class EnemyFSM_Shifting : MonoBehaviour
 {
     [Header("FOV Settings")]
     public float radius;
@@ -38,10 +31,6 @@ public class EnemyFSM : MonoBehaviour
     [Header("Health")]
     public float health;
 
-    [Header("Enemy Type")]
-    public bool canBeStunned;
-    public bool isEthereal;
-
     [Header("Materials")]
     public List<Material> materials;
     public SkinnedMeshRenderer skinnedMeshRenderer;
@@ -50,8 +39,6 @@ public class EnemyFSM : MonoBehaviour
 
     public NPCTarget player;
 
-    public SphereCollider handCollider;
-
     int currentIndex = 0;
     NavMeshAgent agent;
 
@@ -59,12 +46,10 @@ public class EnemyFSM : MonoBehaviour
 
     private void Awake()
     {
-        handCollider.enabled = false;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = attackRange;
         agent.autoBraking = true;
-        skinnedMeshRenderer = GameObject.FindGameObjectWithTag("EnemySkin").GetComponent<SkinnedMeshRenderer>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -75,8 +60,6 @@ public class EnemyFSM : MonoBehaviour
         {
             agent.SetDestination(checkpoints[currentIndex].position);
         }
-
-        skinnedMeshRenderer.material = materials[1];
     }
     private void OnDrawGizmos()
     {
@@ -122,15 +105,6 @@ public class EnemyFSM : MonoBehaviour
         if (player.useLightBeam == false)
         {
             Time.timeScale = 1.0f;
-        }
-
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[1];
-        } else
-        {
-
-            skinnedMeshRenderer.material = materials[0];
         }
     }
     private void FieldOfViewCheck()
@@ -227,37 +201,10 @@ public class EnemyFSM : MonoBehaviour
         }
     }
 
-    public void ActivateEnemyCollider()
+    public void OnHitShiftToNewPos()
     {
-        handCollider.enabled = true;
-    }
-
-    public void DisaleEnemyCollider()
-    {
-        handCollider.enabled = false;
-    }
-
-    public void StunEnemy()
-    {
-        if (canBeStunned == true)
-        {
-            Time.timeScale = 0;
-        } 
-    }
-
-    public void ResumeEnemy()
-    {
-        if (canBeStunned == true)
-        {
-            Time.timeScale = 1f;
-        }
-    }
-
-    public void EtherealEnemy()
-    {
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[0];
-        }
+        float randomfloat = Random.Range(-12, 12);
+        Vector3 randomPOS = new Vector3(target.position.x + randomfloat, target.position.y, transform.position.z);
+        transform.position = randomPOS;
     }
 }
