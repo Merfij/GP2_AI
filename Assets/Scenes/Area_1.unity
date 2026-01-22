@@ -1863,6 +1863,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8843688}
     - target: {fileID: 3468705997037059244, guid: 98e9492723340be42a3daecf1c059faf, type: 3}
+      propertyPath: chaseRange
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3468705997037059244, guid: 98e9492723340be42a3daecf1c059faf, type: 3}
       propertyPath: isEthereal
       value: 0
       objectReference: {fileID: 0}

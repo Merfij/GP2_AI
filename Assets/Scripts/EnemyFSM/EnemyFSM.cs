@@ -40,14 +40,14 @@ public class EnemyFSM : MonoBehaviour
     [Header("Health")]
     public float health;
 
-    [Header("Enemy Type")]
-    public bool canBeStunned;
-    private bool isStunned;
-    public bool isEthereal;
+    //[Header("Enemy Type")]
+    //public bool canBeStunned;
+    //private bool isStunned;
+    //public bool isEthereal;
 
-    [Header("Materials")]
-    public List<Material> materials;
-    public SkinnedMeshRenderer skinnedMeshRenderer;
+    //[Header("Materials")]
+    //public List<Material> materials;
+    //public SkinnedMeshRenderer skinnedMeshRenderer;
 
     public Transform[] checkpoints;
 
@@ -67,7 +67,7 @@ public class EnemyFSM : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = attackRange;
         agent.autoBraking = true;
-        skinnedMeshRenderer = GameObject.FindGameObjectWithTag("EnemySkin").GetComponent<SkinnedMeshRenderer>();
+        //skinnedMeshRenderer = GameObject.FindGameObjectWithTag("EnemySkin").GetComponent<SkinnedMeshRenderer>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -79,7 +79,7 @@ public class EnemyFSM : MonoBehaviour
             agent.SetDestination(checkpoints[currentIndex].position);
         }
 
-        skinnedMeshRenderer.material = materials[1];
+        //skinnedMeshRenderer.material = materials[1];
     }
     private void OnDrawGizmos()
     {
@@ -99,14 +99,14 @@ public class EnemyFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[1];
-        }
-        else
-        {
-            skinnedMeshRenderer.material = materials[0];
-        }
+        //if (isEthereal == true)
+        //{
+        //    skinnedMeshRenderer.material = materials[1];
+        //}
+        //else
+        //{
+        //    skinnedMeshRenderer.material = materials[0];
+        //}
 
         switch (currentState)
         {
@@ -122,10 +122,6 @@ public class EnemyFSM : MonoBehaviour
                 animator.SetInteger("AIState", 3);
                 UpdateAttack();
                 break;
-            case EnemyState.Electrocuted:
-                animator.SetInteger("AIState", 4);
-                UpdateElectrocuted(); 
-                break;
         }
 
         FieldOfViewCheck();
@@ -134,18 +130,13 @@ public class EnemyFSM : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        if (player.useLightBeam == false)
-        {
-            isStunned = false;
-        }
     }
 
-    private void UpdateElectrocuted()
-    {
-        agent.isStopped = true;
-        isStunned = true;
-    }
+    //private void UpdateElectrocuted()
+    //{
+    //    agent.isStopped = true;
+    //    isStunned = true;
+    //}
 
     private void FieldOfViewCheck()
     {
@@ -174,7 +165,6 @@ public class EnemyFSM : MonoBehaviour
     {
         agent.isStopped = true;
         agent.ResetPath();
-        isStunned = false;
 
         // Face the player
 
@@ -203,7 +193,6 @@ public class EnemyFSM : MonoBehaviour
 
     private void UpdateChase()
     {
-        isStunned = false;
         if (canSeePlayer && player.health > 0)
         {
             agent.isStopped = false;
@@ -226,7 +215,6 @@ public class EnemyFSM : MonoBehaviour
     private void UpdatePatrol()
     {
         agent.speed = patrolSpeed;
-        isStunned = false;
 
         if (!agent.pathPending && agent.remainingDistance <= waypointTolerance)
         {
@@ -254,44 +242,44 @@ public class EnemyFSM : MonoBehaviour
         handCollider.enabled = false;
     }
 
-    public void StunEnemy()
-    {
-        if (canBeStunned == true)
-        {
-            Debug.Log("Enemy Stunned");
-            currentState = EnemyState.Electrocuted;
-        } 
-    }
+    //public void StunEnemy()
+    //{
+    //    if (canBeStunned == true)
+    //    {
+    //        Debug.Log("Enemy Stunned");
+    //        currentState = EnemyState.Electrocuted;
+    //    } 
+    //}
 
-    public void ResumeEnemy()
-    {
-        if (canBeStunned == true)
-        {
-            currentState = EnemyState.Patrolling;
-        }
-    }
+    //public void ResumeEnemy()
+    //{
+    //    if (canBeStunned == true)
+    //    {
+    //        currentState = EnemyState.Patrolling;
+    //    }
+    //}
 
-    public void EtherealEnemy()
-    {
-        if (isEthereal == true)
-        {
-            skinnedMeshRenderer.material = materials[0];
-        }
-    }
+    //public void EtherealEnemy()
+    //{
+    //    if (isEthereal == true)
+    //    {
+    //        skinnedMeshRenderer.material = materials[0];
+    //    }
+    //}
 
-    public void TakeDamage(int damage)
-    {
-        if (canBeStunned == true)
-        {
-            if (isStunned == true)
-            {
-                health -= damage;
-            }
-            else return;
-        }
-        else
-        {
-            health -= damage;
-        }
-    }
+    //public void TakeDamage(int damage)
+    //{
+    //    if (canBeStunned == true)
+    //    {
+    //        if (isStunned == true)
+    //        {
+    //            health -= damage;
+    //        }
+    //        else return;
+    //    }
+    //    else
+    //    {
+    //        health -= damage;
+    //    }
+    //}
 }

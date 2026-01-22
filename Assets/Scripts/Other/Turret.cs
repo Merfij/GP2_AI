@@ -82,7 +82,6 @@ public class LockOnTurret : MonoBehaviour
         if (Physics.Raycast(ray, out hit, range))
         {
             Debug.Log("Locked turret hit: " + hit.collider.name);
-            hit.collider.GetComponent<EnemyFSM>()?.TakeDamage(10);
         }
 
         Debug.DrawRay(firePoint.position, firePoint.forward * range, Color.red, 1f);
