@@ -61,31 +61,31 @@ public class NPCTarget : MonoBehaviour
                 Debug.Log("Beam not on stun enemy");
             }
 
-            RaycastHit hitEthereal;
-            if (Physics.Raycast(transform.position, transform.forward, out hitEthereal, Mathf.Infinity, etherealMask))
-            {
-                etherealEnemy.Invoke();
-                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hitEthereal.distance, Color.yellow);
-                Debug.Log("Did Hit");
-            }
-            else
-            {
-                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.darkRed);
-                Debug.Log("Did not Hit");
-            }
+            //RaycastHit hitEthereal;
+            //if (Physics.Raycast(transform.position, transform.forward, out hitEthereal, Mathf.Infinity, etherealMask))
+            //{
+            //    etherealEnemy.Invoke();
+            //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hitEthereal.distance, Color.yellow);
+            //    Debug.Log("Did Hit");
+            //}
+            //else
+            //{
+            //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.darkRed);
+            //    Debug.Log("Did not Hit");
+            //}
 
-            RaycastHit hitShifting;
-            if (Physics.Raycast(transform.position, transform.forward, out hitShifting, Mathf.Infinity, shiftingMask))
-            {
-                hitShiftingEnemy.Invoke();
-                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hitShifting.distance, Color.yellow);
-                Debug.Log("Did Hit");
-            }
-            else
-            {
-                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.darkRed);
-                Debug.Log("Did not Hit");
-            }
+            //RaycastHit hitShifting;
+            //if (Physics.Raycast(transform.position, transform.forward, out hitShifting, Mathf.Infinity, shiftingMask))
+            //{
+            //    hitShiftingEnemy.Invoke();
+            //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hitShifting.distance, Color.yellow);
+            //    Debug.Log("Did Hit");
+            //}
+            //else
+            //{
+            //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.darkRed);
+            //    Debug.Log("Did not Hit");
+            //}
         }
 
     }
